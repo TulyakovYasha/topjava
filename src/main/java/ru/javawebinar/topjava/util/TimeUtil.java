@@ -9,7 +9,4 @@ public class TimeUtil {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) <= 0;
     }
 
-    public static LocalDate toLocalDate(LocalDateTime localDateTime) {
-        return LocalDate.of(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth());
-    }
 }

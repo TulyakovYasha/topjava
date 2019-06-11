@@ -15,25 +15,13 @@
     </tr>
     <c:forEach items="${meals}" var="mealTo">
         <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
-        <c:choose>
-            <c:when test="${mealTo.excess == true}">
-                <tr bgcolor="red">
-                    <td><%= DatesUtils.format(mealTo.getDateTime())%></td>
-                    <td>${mealTo.description}</td>
-                    <td>${mealTo.calories}</td>
-                    <td><img src="img/pencil.png"></td>
-                    <td><img src="img/delete.png"></td>
-                </tr>
-            </c:when>
-            <c:when test="${mealTo.excess == false}">
-                <tr bgcolor="#adff2f">
-                    <td><%= DatesUtils.format(mealTo.getDateTime())%></td>
-                    <td>${mealTo.description}</td>
-                    <td>${mealTo.calories}</td>
-                    <td><img src="img/pencil.png"></td>
-                    <td><img src="img/delete.png"></td>
-                </tr>
-            </c:when>
-        </c:choose>
+        <tr bgcolor="${mealTo.excess ? "red" : "green"}">
+            <td><%= DatesUtils.format(mealTo.getDateTime())%>
+            </td>
+            <td>${mealTo.description}</td>
+            <td>${mealTo.calories}</td>
+            <td><img src="img/pencil.png"></td>
+            <td><img src="img/delete.png"></td>
+        </tr>
     </c:forEach>
 </table>

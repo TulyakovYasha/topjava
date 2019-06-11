@@ -1,9 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.AddMeals;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 
@@ -22,7 +20,7 @@ public class MealServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<MealTo> mealsTo = MealsUtil.getFilteredWithExcess(AddMeals.meals, LocalTime.MIN, LocalTime.MAX, 2000);
+        List<MealTo> mealsTo = MealsUtil.getFilteredWithExcess(MealsUtil.meals, LocalTime.MIN, LocalTime.MAX, 2000);
         request.setAttribute("meals", mealsTo);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }

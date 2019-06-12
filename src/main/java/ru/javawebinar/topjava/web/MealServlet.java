@@ -33,7 +33,13 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String time = request.getParameter("time");
         String description = request.getParameter("description");
-        int calories = Integer.parseInt(request.getParameter("calories"));
+        String caloriesParam = request.getParameter("calories");
+        int calories;
+        if(caloriesParam.equals("")){
+            calories = 0;
+        }else {
+            calories = Integer.parseInt(request.getParameter("calories"));
+        }
         boolean excess = Boolean.valueOf(request.getParameter("excess"));
         String id = request.getParameter("id");
         LocalDateTime localDateTime;

@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Список еды</title>
 </head>
 <table border="1" cellpadding="8" cellspacing="0">
@@ -20,8 +21,8 @@
             </td>
             <td>${mealTo.description}</td>
             <td>${mealTo.calories}</td>
-            <td><img src="img/pencil.png"></td>
-            <td><img src="img/delete.png"></td>
+            <td><a href="meals?id=${mealTo.id}&action=edit"><img src="img/pencil.png"></a></td>
+            <td><a href="meals?id=${mealTo.id}&action=delete"><img src="img/delete.png"></a></td>
         </tr>
     </c:forEach>
 </table>

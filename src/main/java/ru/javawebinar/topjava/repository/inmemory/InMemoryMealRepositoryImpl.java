@@ -9,9 +9,7 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -34,7 +32,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         } else if (get(meal.getId(), userId) == null) {
             return null;
         }
-        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
+        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, HashMap::new);
         mealMap.put(meal.getId(), meal);
         return meal;
     }
@@ -55,12 +53,12 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return repository.get(userId).values().stream().sorted(DATE_COMPARATOR).collect(Collectors.toList());
     }
 
     @Override
-    public Collection<Meal> getSorted(int userId, LocalDate startDate, LocalDate endDate) {
+    public List<Meal> getFiltered(int userId, LocalDate startDate, LocalDate endDate) {
        return getAll(userId)
                 .stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
                 .sorted(DATE_COMPARATOR)

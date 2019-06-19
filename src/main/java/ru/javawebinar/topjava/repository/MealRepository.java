@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface MealRepository {
     Meal save(Meal meal, int userId);
@@ -17,9 +18,9 @@ public interface MealRepository {
     // null if not found
     Meal get(int id, int userId);
 
-    Collection<Meal> getAll(int userId);
+    List<Meal> getAll(int userId);
 
-    Collection<Meal> getSorted(int userId, LocalDate startDate, LocalDate endDate);
+    List<Meal> getFiltered(int userId, LocalDate startDate, LocalDate endDate);
 
 
 }

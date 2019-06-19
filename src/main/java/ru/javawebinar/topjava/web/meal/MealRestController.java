@@ -25,9 +25,6 @@ public class MealRestController {
     }
 
     public Meal create(Meal meal) {
-        if (!meal.isNew()) {
-            update(meal, meal.getId());
-        }
         ValidationUtil.checkNew(meal);
         return service.create(meal, SecurityUtil.authUserId());
     }
@@ -44,8 +41,8 @@ public class MealRestController {
         return MealsUtil.getFilteredWithExcess(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(), LocalTime.MIN, LocalTime.MAX);
     }
 
-    public List<MealTo> getSorted(String startTime, String endTime, String startDate, String endDate) {
-        return MealsUtil.getFilteredWithExcess(service.getSorted(SecurityUtil.authUserId(), startDate.equals("") ? LocalDate.MIN : LocalDate.parse(startDate),
+    public List<MealTo> getFiltered(String startTime, String endTime, String startDate, String endDate) {
+        return MealsUtil.getFilteredWithExcess(service.getFiltered(SecurityUtil.authUserId(), startDate.equals("") ? LocalDate.MIN : LocalDate.parse(startDate),
                 endDate.equals("") ? LocalDate.MAX : LocalDate.parse(endDate)),
                 SecurityUtil.authUserCaloriesPerDay(),
                 startTime.equals("") ? LocalTime.MIN : LocalTime.parse(startTime),

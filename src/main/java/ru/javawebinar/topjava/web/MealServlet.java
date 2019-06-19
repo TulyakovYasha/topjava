@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepositoryImpl;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -16,9 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -43,13 +38,16 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                SecurityUtil.authUserId(),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        restController.create(meal);
+        if (meal.isNew()) {
+            restController.create(meal);
+        } else {
+            restController.update(meal, Integer.valueOf(id));
+        }
         response.sendRedirect("meals");
     }
 
@@ -78,7 +76,7 @@ public class MealServlet extends HttpServlet {
                 String endDate = request.getParameter("endDate");
                 String endTime = request.getParameter("endTime");
                 request.setAttribute("meals",
-                        restController.getSorted(startTime, endTime, startDate, endDate));
+                        restController.getFiltered(startTime, endTime, startDate, endDate));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
@@ -98,7 +96,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        super.destroy();
         appCtx.close();
     }
 }

@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface MealService {
 
@@ -15,9 +16,9 @@ public interface MealService {
 
     Meal get(int id, int userId) throws NotFoundException;
 
-    Collection<Meal> getAll(int userId);
+    List<Meal> getAll(int userId);
 
-    Collection<Meal> getSorted(int userId, LocalDate startDate, LocalDate endDate);
+    List<Meal> getFiltered(int userId, LocalDate startDate, LocalDate endDate);
 
     void update(Meal meal, int userId) throws NotFoundException;
 

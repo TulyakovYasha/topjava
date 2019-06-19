@@ -38,7 +38,7 @@ public class MealRestController {
     }
 
     public List<MealTo> getAll() {
-        return MealsUtil.getFilteredWithExcess(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(), LocalTime.MIN, LocalTime.MAX);
+        return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealTo> getFiltered(String startTime, String endTime, String startDate, String endDate) {

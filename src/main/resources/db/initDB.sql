@@ -26,7 +26,7 @@ CREATE TABLE meals
   calories    INTEGER                           NOT NULL,
   FOREIGN KEY (user_id) references users (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX user_meal_datetime_idx ON meals(datetime);
+CREATE UNIQUE INDEX user_meal_datetime_idx ON meals(user_id, datetime);
 
 CREATE TABLE user_roles
 (

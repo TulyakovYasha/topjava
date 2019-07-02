@@ -11,7 +11,9 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Transactional(readOnly = true)
@@ -23,14 +25,17 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        User ref = em.getReference(User.class, userId);
-        meal.setUser(ref);
         if (meal.isNew()) {
+            User ref = em.getReference(User.class, userId);
+            meal.setUser(ref);
             em.persist(meal);
             return meal;
         } else {
-            if (get(meal.getId(), userId) == null)
+            Meal oldMeal = get(meal.getId(), userId);
+            if(oldMeal == null){
                 return null;
+            }
+            meal.setUser(oldMeal.getUser());
             return em.merge(meal);
         }
     }
@@ -43,8 +48,10 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        List<Meal> list = em.createNamedQuery(Meal.GET, Meal.class).setParameter("id", id).setParameter("user_id", userId).getResultList();
-        return DataAccessUtils.singleResult(list);
+        Meal meal = em.find(Meal.class, id);
+        if (meal == null) {
+            return null;
+        } else return meal.getUser().getId().equals(userId) ? meal : null;
     }
 
     @Override

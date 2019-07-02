@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,7 +11,6 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -21,8 +20,9 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -35,6 +35,9 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private long startTime;
+    private long time;
+    private static Map<String, Long> map = new HashMap<>();
 
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
@@ -45,13 +48,28 @@ public class MealServiceTest {
     public final TestName testName = new TestName();
 
     @Rule
-    public final TestWatcher testWatcher = new TestWatcher() {
+    public final TestWatcher watcher = new TestWatcher() {
+
+        @Override
+        protected void starting(Description description) {
+            startTime = System.currentTimeMillis();
+        }
+
         @Override
         protected void finished(Description description) {
-            log.info(LocalTime.now().toString());
-            System.out.println("Method name : " + testName.getMethodName() + ". Time " + LocalTime.now().toString());
+            time = System.currentTimeMillis() - startTime;
+            log.info(String.valueOf(time));
+            map.put(description.getMethodName(), time);
         }
     };
+
+
+    @AfterClass
+    public static void logAllMethods(){
+        for (Map.Entry<String, Long> map : map.entrySet()){
+            log.info("Test class name: " + map.getKey() + ". Test class occupied time: " + map.getValue() + " seconds");
+        }
+    }
 
     @Autowired
     private MealService service;

@@ -9,4 +9,5 @@ public class ActiveDbProfileResolver implements ActiveProfilesResolver {
     public String[] resolve(Class<?> aClass) {
         return new String[]{Profiles.getActiveDbProfile()};
     }
+
 }
